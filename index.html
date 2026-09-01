@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scenewright</title>
+<style>
+:root{--bg:#0c0d10;--card:#13151b;--line:#2a2e3a;--text:#e8e6df;--muted:#9a9588;--accent:#c4a574}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 system-ui;padding:12px}
+h1{font-size:18px;margin:0 0 8px}h1 span{color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+button,select,input,textarea{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px}
+button{cursor:pointer}button.p{border-color:var(--accent);color:var(--accent)}
+textarea{width:100%;min-height:90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
+.muted{color:var(--muted);font-size:12px}
+.prompt{white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace;background:#0c0d10;padding:10px;border-radius:6px}
+nav button.on{border-color:var(--accent)}
+</style>
+</head>
+<body>
+<h1>Scene<span>wright</span></h1>
+<p class="muted">Paste a chapter. Lock faces. Copy Grok Imagine prompts. Data stays in this browser.</p>
+<nav class="row" id="nav"></nav>
+<div class="row">
+  <button class="p" id="sample">Load sample</button>
+  <button id="neu">New</button>
+</div>
+<main id="main"></main>
+<script>
+const STEPS=["Story","Bible","Scenes","Export"];
+const state={step:0,p:null};
+const $=id=>document.getElementById(id);
+function uid(){return Math.random().toString(36).slice(2,8)}
+function styleP(s){return [s.medium,s.camera,s.lighting,s.palette&&("Palette: "+s.palette),s.forbidden&&("Forbidden: "+s.forbidden)].filter(Boolean).join(" ")}
+function compile(p,sc){
+  const loc=p.locations.find(l=>l.id===sc.loc)||{};
+  const chars=(sc.cast||[]).map(id=>{
+    const c=p.characters.find(x=>x.id===id); if(!c)return "";
+    const w=(c.wardrobe||[]).find(x=>x.id===sc.ward[id])||c.wardrobe[0]||{};
+    return "Same person as the lock plate: "+(c.block||c.name)+". "+(w.desc||"");
+  }).filter(Boolean).join(" ");
+  return [styleP(p.style),"Shot: "+(sc.shot||"MS")+". Aspect: landscape.",
+    loc.block?("Same place as the location plate: "+loc.block+"."):"",
+    chars,sc.frame||sc.beat||""].filter(Boolean).join(" ");
+}
+function sample(){
+  const m="m",t="t",k="k",r="r";
+  const mw1="a",mw2="b",tw1="c",tw2="d";
+  return {
+    title:"Beech Street",
+    story:"Rain on Beech Street. Mara Quinn climbed the steps of number twelve in soaked navy scrubs. In the narrow kitchen she filled the yellow kettle with her coat still on, then hung it on the chair. Tom came in with the mail, shook his grey coat, and they stood by the kettle. Later they sat on the olive settee by the gas fire. She closed her eyes. Scrubs still on.",
+    style:{medium:"Cinematic still photograph, British kitchen-sink realism, natural tired skin",camera:"shallow depth on faces",lighting:"practical light only",palette:"navy, mustard kettle, fire orange, wet grey",forbidden:"text, beauty filter, anime, logos"},
+    characters:[
+      {id:m,name:"Mara Quinn",age:"34",block:"34-year-old white woman, 5'6\", compact, tired rounded shoulders, oval face, deep-set grey-green eyes, centre-part dark brown hair stuck to her cheeks from rain, red lanyard line on her throat.",wardrobe:[
+        {id:mw1,label:"wet-coat",desc:"navy V-neck scrubs under soaked navy coat, black clogs"},
+        {id:mw2,label:"scrubs",desc:"navy V-neck scrubs, coat off, black clogs, damp hair"}]},
+      {id:t,name:"Tom Quinn",age:"36",block:"36-year-old white man, 6'1\", lean-tall, long face, dark stubble, rain-flat dark hair with widow's peak.",wardrobe:[
+        {id:tw1,label:"wet-coat",desc:"wet grey wool coat, white shirt, charcoal trousers, brown brogues, mail under arm"},
+        {id:tw2,label:"coat-off",desc:"white shirt no tie, charcoal trousers, brown brogues, coat off"}]}
+    ],
+    locations:[
+      {id:k,name:"Kitchen",block:"narrow British terrace galley, pale lino, yellow drum kettle on back ring, ginger tom on washer, bare overhead bulb"},
+      {id:r,name:"Sitting room",block:"small front room, olive settee, coal-effect gas fire, dark rainy window, no overhead light"}
+    ],
+    scenes:[
+      {id:uid(),title:"S01 Steps",beat:"Arrives soaked",frame:"On wet terrace steps, keys in hand, coat on.",shot:"WS",loc:k,cast:[m],ward:{[m]:mw1}},
+      {id:uid(),title:"S02 Kettle",beat:"Coat still on",frame:"Fills the yellow kettle, coat dripping on lino.",shot:"MS",loc:k,cast:[m],ward:{[m]:mw1}},
+      {id:uid(),title:"S03 Coat off",beat:"Coat on chair",frame:"Coat on the chair in a puddle. She touches the red throat line.",shot:"MCU",loc:k,cast:[m],ward:{[m]:mw2}},
+      {id:uid(),title:"S04 Tom enters",beat:"Mail in the doorway",frame:"Tom in the doorway shaking a wet grey coat, mail under his arm.",shot:"MS",loc:k,cast:[m,t],ward:{[m]:mw2,[t]:tw1}},
+      {id:uid(),title:"S05 Two-shot",beat:"Kettle and two people",frame:"Wide galley: two standing figures, yellow kettle, cat on washer.",shot:"WS",loc:k,cast:[m,t],ward:{[m]:mw2,[t]:tw2}},
+      {id:uid(),title:"S06 Fire",beat:"Settee button",frame:"On the olive settee by the gas fire, her eyes closed, scrubs still on.",shot:"MCU",loc:r,cast:[m,t],ward:{[m]:mw2,[t]:tw2}}
+    ]
+  };
+}
+function blank(){return {title:"Untitled",story:"",style:{medium:"Cinematic still photograph, natural skin, practical light",camera:"",lighting:"",palette:"",forbidden:"text, logos, anime"},characters:[],locations:[],scenes:[]}}
+state.p=JSON.parse(localStorage.getItem("sw.p")||"null")||blank();
+function save(){localStorage.setItem("sw.p",JSON.stringify(state.p))}
+function extract(){
+  const p=state.p;
+  const names=[...p.story.matchAll(/\b([A-Z][a-z]{2,}(?:\s+[A-Z][a-z]{2,})?)\b/g)].map(m=>m[1]);
+  const stop=new Set("The And With From That They When She His Her Then Rain Later".split(" "));
+  const count={};
+  names.forEach(n=>{if(!stop.has(n.split(" ")[0]))count[n]=(count[n]||0)+1});
+  const leads=Object.entries(count).filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  if(!p.characters.length)p.characters=leads.map(([name])=>({id:uid(),name,age:"",block:"",wardrobe:[{id:uid(),label:"default",desc:""}]}));
+  if(!p.locations.length)p.locations=[{id:uid(),name:"Primary room",block:""}];
+  if(!p.scenes.length){
+    const bits=p.story.split(/\n\s*\n/).filter(x=>x.trim().length>40).slice(0,10);
+    p.scenes=bits.map((ex,i)=>({id:uid(),title:"S"+String(i+1).padStart(2,"0"),beat:ex.split(/[.!?]/)[0],frame:"",shot:"MS",loc:p.locations[0].id,cast:p.characters.slice(0,2).map(c=>c.id),ward:{}}));
+  }
+  state.step=1; save(); draw();
+}
+function draw(){
+  $("nav").innerHTML=STEPS.map((n,i)=>`<button class="${state.step===i?"on":""}" data-s="${i}">${i+1} ${n}</button>`).join("");
+  const p=state.p;
+  if(state.step===0){
+    $("main").innerHTML=`<div class="card"><label class="muted">Title</label><input id="title" value="${esc(p.title)}"><label class="muted">Chapter</label><textarea id="story">${esc(p.story)}</textarea><div class="row"><button class="p" id="go">Extract + cut scenes</button></div></div>`;
+    $("title").oninput=e=>{p.title=e.target.value;save()};
+    $("story").oninput=e=>{p.story=e.target.value;save()};
+    $("go").onclick=extract;
+  }
+  if(state.step===1){
+    $("main").innerHTML=`<div class="card"><h3>Style lock</h3>
+      <input id="medium" value="${esc(p.style.medium)}" placeholder="Medium">
+      <input id="light" value="${esc(p.style.lighting)}" placeholder="Lighting">
+      <input id="pal" value="${esc(p.style.palette)}" placeholder="Palette"></div>
+      ${(p.characters||[]).map((c,i)=>`<div class="card"><h3>${esc(c.name)}</h3>
+        <input data-ca="${i}" data-k="age" value="${esc(c.age)}" placeholder="Age presented">
+        <textarea data-ca="${i}" data-k="block" placeholder="Frozen identity paragraph">${esc(c.block)}</textarea>
+        ${(c.wardrobe||[]).map((w,wi)=>`<input data-ca="${i}" data-w="${wi}" value="${esc(w.desc)}" placeholder="Wardrobe ${esc(w.label)}">`).join("")}
+      </div>`).join("")}
+      ${(p.locations||[]).map((l,i)=>`<div class="card"><h3>Location ${esc(l.name)}</h3><textarea data-lo="${i}">${esc(l.block)}</textarea></div>`).join("")}
+      <div class="row"><button id="addc">Add character</button><button id="addl">Add location</button><button class="p" id="toscenes">Compile scenes</button></div>`;
+    $("medium").oninput=e=>{p.style.medium=e.target.value;save()};
+    $("light").oninput=e=>{p.style.lighting=e.target.value;save()};
+    $("pal").oninput=e=>{p.style.palette=e.target.value;save()};
+    document.querySelectorAll("[data-ca]").forEach(el=>el.oninput=()=>{
+      const c=p.characters[+el.dataset.ca];
+      if(el.dataset.w!=null) c.wardrobe[+el.dataset.w].desc=el.value;
+      else c[el.dataset.k]=el.value; save();
+    });
+    document.querySelectorAll("[data-lo]").forEach(el=>el.oninput=()=>{p.locations[+el.dataset.lo].block=el.value;save()});
+    $("addc").onclick=()=>{p.characters.push({id:uid(),name:"New",age:"",block:"",wardrobe:[{id:uid(),label:"default",desc:""}]});save();draw()};
+    $("addl").onclick=()=>{p.locations.push({id:uid(),name:"New place",block:""});save();draw()};
+    $("toscenes").onclick=()=>{state.step=2;save();draw()};
+  }
+  if(state.step===2){
+    $("main").innerHTML=p.scenes.map((s,i)=>`<div class="card"><strong>${esc(s.title)}</strong>
+      <div class="muted">${esc(s.beat)}</div>
+      <textarea data-fr="${i}">${esc(s.frame)}</textarea>
+      <div class="prompt">${esc(compile(p,s))}</div>
+      <button data-cp="${i}">Copy prompt</button>
+    </div>`).join("")+`<div class="row"><button class="p" id="toex">Export pack</button></div>`;
+    document.querySelectorAll("[data-fr]").forEach(el=>el.oninput=()=>{p.scenes[+el.dataset.fr].frame=el.value;save()});
+    document.querySelectorAll("[data-cp]").forEach(el=>el.onclick=()=>{
+      navigator.clipboard.writeText(compile(p,p.scenes[+el.dataset.cp])); el.textContent="Copied";
+    });
+    $("toex").onclick=()=>{state.step=3;draw()};
+  }
+  if(state.step===3){
+    const locks=[...p.characters.map(c=>"LOCK "+c.name+" (portrait)\n"+styleP(p.style)+" Neutral full-body lock plate. "+c.block+" "+((c.wardrobe[0]||{}).desc||"")+" Standing still, full body."),
+      ...p.locations.map(l=>"LOCK "+l.name+" (landscape)\n"+styleP(p.style)+" Empty establishing shot. "+l.block)];
+    const pack=["# "+p.title,...locks,"",...p.scenes.map(s=>"## "+s.title+"\n"+compile(p,s))].join("\n\n");
+    $("main").innerHTML=`<div class="card"><p class="muted">In Grok Imagine: generate lock cards first, then S01–S03, then the rest.</p>
+      <div class="prompt" id="pack">${esc(pack)}</div>
+      <div class="row"><button class="p" id="cpack">Copy all</button></div></div>`;
+    $("cpack").onclick=()=>navigator.clipboard.writeText($("pack").innerText);
+  }
+}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&","<":"<",">":">","\"":"""}[c]))}
+$("nav").addEventListener("click",e=>{if(e.target.dataset.s){state.step=+e.target.dataset.s;draw()}});
+$("sample").onclick=()=>{state.p=sample();state.step=2;save();draw()};
+$("neu").onclick=()=>{state.p=blank();state.step=0;save();draw()};
+draw();
+</script>
+</body>
+</html>
