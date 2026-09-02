@@ -1,11 +1,10 @@
-# Scenewright
+# Scenewright — $10
 
-Open the app in a browser (no install):
+Paste a chapter. Lock faces. Export Grok Imagine prompts.
 
-- Preview: https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/index.html
+- Live demo: https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/paid-10/index.html
 - Repo: https://github.com/serialchiller09-boop/scenewright
 
-On the phone: tap the preview link, then **Load sample**.
+**$10 one-time.** You get the compiler and a downloadable prompt pack (lock plates + scene prompts).
 
-If GitHub Pages is enabled on this repo, the live app is:
-https://serialchiller09-boop.github.io/scenewright/
+On the phone: open the demo, tap **Load sample**.
