@@ -15,7 +15,7 @@
 <link rel="canonical" href="https://serialchiller09-boop.github.io/scenewright/sell.html">
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0c0d10;color:#e8e6df;font:17px/1.5 system-ui,-apple-system,sans-serif}
+body{margin:0;background:#0c0d10;color:#e8e6df;font:17px/1.5 system-ui,-apple-system,sans-serif;padding-bottom:76px}
 .wrap{max-width:640px;margin:0 auto;padding:28px 20px 48px}
 .brand{font-size:15px;letter-spacing:.04em;color:#9a9588;margin:0 0 20px}
 .brand b{color:#c4a574;font-weight:600}
@@ -30,6 +30,15 @@ ul.benefits li::before{content:"";position:absolute;left:0;top:18px;width:10px;h
 .card h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#9a9588;margin:0 0 12px;font-weight:600}
 .card ul{margin:0;padding-left:1.15em;color:#e8e6df}
 .card li{margin:6px 0}
+.sample{background:#13151b;border:1px solid #2a2e3a;border-radius:10px;padding:16px;margin:0 0 28px}
+.sample h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#9a9588;margin:0 0 8px;font-weight:600}
+.sample .intro{color:#c8c4b8;font-size:14px;margin:0 0 12px}
+.sample .label{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#c4a574;margin:12px 0 6px;font-weight:600}
+.sample .label:first-of-type{margin-top:0}
+.sample pre{margin:0;white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:#000;color:#e8e6df;padding:12px;border-radius:8px;border:1px solid #2a2e3a;max-height:9.5em;overflow:auto}
+.sample .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+button.copy{font:inherit;cursor:pointer;color:#c4a574;background:transparent;border:1px solid #c4a574;border-radius:8px;padding:10px 14px;font-weight:600}
+button.copy:hover{background:#c4a574;color:#0c0d10}
 .price{font-size:1.35rem;margin:0 0 6px}
 .price strong{color:#c4a574}
 .muted{color:#9a9588;font-size:14px;margin:0 0 18px}
@@ -52,6 +61,10 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 .preview{font-size:13px;color:#9a9588;margin:0 0 22px;line-height:1.45}
 .preview a{color:#c4a574}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid #2a2e3a;color:#9a9588;font-size:13px}
+.sticky-buy{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(12,13,16,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #2a2e3a;padding:10px 16px;display:flex;justify-content:center;gap:12px;align-items:center;flex-wrap:wrap}
+.sticky-buy .price-mini{color:#9a9588;font-size:13px;margin:0}
+.sticky-buy .price-mini strong{color:#c4a574}
+.sticky-buy a.buy{padding:12px 18px}
 </style>
 </head>
 <body>
@@ -66,6 +79,19 @@ button.share:hover{background:#c4a574;color:#0c0d10}
     <li><strong>Scene cuts, not guesswork.</strong> Extract beats, set wardrobe and locations, compile shot prompts.</li>
     <li><strong>One export pack.</strong> Lock plates + S01&ndash;Sn prompts you can copy or download as .txt.</li>
   </ul>
+
+  <div class="sample" id="sampleOut">
+    <h2>Sample output</h2>
+    <p class="intro">From the included Beech Street pack&mdash;lock plates first, then scene prompts. Same face paragraph reused in every shot.</p>
+    <div class="label">LOCK Mara Quinn</div>
+    <pre id="sampleLock">Cinematic still photograph, British kitchen-sink realism, natural tired skin. Neutral full-body lock plate. 34-year-old white woman, compact, tired rounded shoulders, oval face, deep-set grey-green eyes, centre-part dark brown hair stuck to her cheeks from rain, red lanyard line on her throat. navy V-neck scrubs under soaked navy coat. Standing still, full body.</pre>
+    <div class="label">S02 Kettle</div>
+    <pre id="sampleScene">Shot: MS. Aspect: landscape. Same person as the lock plate: 34-year-old white woman&hellip; navy V-neck scrubs under soaked navy coat. Same place as the location plate: narrow British terrace galley, yellow drum kettle on back ring. Fills the yellow kettle, coat dripping on lino.</pre>
+    <div class="row">
+      <button type="button" class="copy" id="copySample">Copy sample scene</button>
+      <a class="sec" href="https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/packs/beech-street-imagine-pack.txt" target="_blank" rel="noopener">Full sample pack</a>
+    </div>
+  </div>
 
   <div class="card">
     <h2>What&rsquo;s included</h2>
@@ -113,24 +139,47 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 
   <p class="foot">Local HTML. Your chapter stays in the browser. Payment is handled by PayPal&mdash;no custom payment backend.</p>
 </div>
+<div class="sticky-buy" role="region" aria-label="Buy">
+  <p class="price-mini"><strong>$10</strong> one-time</p>
+  <a class="buy" href="https://py.pl/VzHU7QkjihOOJv6slVmG9A" target="_blank" rel="noopener">Buy — $10</a>
+  <a class="sec" href="index.html">Try demo</a>
+</div>
 <script>
 (function(){
   var SHARE_URL="https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/sell.html";
-  var btn=document.getElementById("shareBtn");
-  if(!btn) return;
-  btn.onclick=function(){
-    function done(){
-      btn.textContent="Link copied";
-      setTimeout(function(){btn.textContent="Share this page"},1600);
-    }
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(SHARE_URL).then(done).catch(function(){
+  var SAMPLE_SCENE="Shot: MS. Aspect: landscape. Same person as the lock plate: 34-year-old white woman, compact, tired rounded shoulders, oval face, deep-set grey-green eyes, centre-part dark brown hair stuck to her cheeks from rain, red lanyard line on her throat. navy V-neck scrubs under soaked navy coat. Same place as the location plate: narrow British terrace galley, yellow drum kettle on back ring. Fills the yellow kettle, coat dripping on lino.";
+  var shareBtn=document.getElementById("shareBtn");
+  if(shareBtn){
+    shareBtn.onclick=function(){
+      function done(){
+        shareBtn.textContent="Link copied";
+        setTimeout(function(){shareBtn.textContent="Share this page"},1600);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(SHARE_URL).then(done).catch(function(){
+          window.prompt("Copy this link:", SHARE_URL);
+        });
+      } else {
         window.prompt("Copy this link:", SHARE_URL);
-      });
-    } else {
-      window.prompt("Copy this link:", SHARE_URL);
-    }
-  };
+      }
+    };
+  }
+  var copyBtn=document.getElementById("copySample");
+  if(copyBtn){
+    copyBtn.onclick=function(){
+      function done(){
+        copyBtn.textContent="Copied";
+        setTimeout(function(){copyBtn.textContent="Copy sample scene"},1600);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(SAMPLE_SCENE).then(done).catch(function(){
+          window.prompt("Copy this prompt:", SAMPLE_SCENE);
+        });
+      } else {
+        window.prompt("Copy this prompt:", SAMPLE_SCENE);
+      }
+    };
+  }
 })();
 </script>
 </body>
