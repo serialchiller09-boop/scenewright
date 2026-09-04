@@ -26,6 +26,14 @@ ul.benefits{list-style:none;padding:0;margin:0 0 28px}
 ul.benefits li{position:relative;padding:10px 0 10px 28px;border-bottom:1px solid #2a2e3a}
 ul.benefits li:last-child{border-bottom:0}
 ul.benefits li::before{content:"";position:absolute;left:0;top:18px;width:10px;height:10px;border-radius:50%;background:#c4a574}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 28px}
+@media (max-width:520px){.compare{grid-template-columns:1fr}}
+.compare .col{background:#13151b;border:1px solid #2a2e3a;border-radius:10px;padding:14px 14px 12px}
+.compare .col.with{border-color:#c4a574}
+.compare h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px;font-weight:600;color:#9a9588}
+.compare .col.with h2{color:#c4a574}
+.compare ul{margin:0;padding-left:1.1em;color:#c8c4b8;font-size:14px}
+.compare li{margin:6px 0}
 .card{background:#13151b;border:1px solid #2a2e3a;border-radius:10px;padding:18px 16px;margin:0 0 28px}
 .card h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#9a9588;margin:0 0 12px;font-weight:600}
 .card ul{margin:0;padding-left:1.15em;color:#e8e6df}
@@ -61,6 +69,7 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 .preview{font-size:13px;color:#9a9588;margin:0 0 22px;line-height:1.45}
 .preview a{color:#c4a574}
 .foot{margin-top:32px;padding-top:16px;border-top:1px solid #2a2e3a;color:#9a9588;font-size:13px}
+.foot a{color:#c4a574}
 .sticky-buy{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(12,13,16,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #2a2e3a;padding:10px 16px;display:flex;justify-content:center;gap:12px;align-items:center;flex-wrap:wrap}
 .sticky-buy .price-mini{color:#9a9588;font-size:13px;margin:0}
 .sticky-buy .price-mini strong{color:#c4a574}
@@ -79,6 +88,25 @@ button.share:hover{background:#c4a574;color:#0c0d10}
     <li><strong>Scene cuts, not guesswork.</strong> Extract beats, set wardrobe and locations, compile shot prompts.</li>
     <li><strong>One export pack.</strong> Lock plates + S01&ndash;Sn prompts you can copy or download as .txt.</li>
   </ul>
+
+  <div class="compare" aria-label="Without vs with Scenewright">
+    <div class="col">
+      <h2>Without</h2>
+      <ul>
+        <li>Rewrite faces every shot</li>
+        <li>Locations drift mid-chapter</li>
+        <li>Copy-paste chaos in a notes app</li>
+      </ul>
+    </div>
+    <div class="col with">
+      <h2>With Scenewright</h2>
+      <ul>
+        <li>One lock plate reused</li>
+        <li>Places stay consistent</li>
+        <li>Export a ready prompt pack</li>
+      </ul>
+    </div>
+  </div>
 
   <div class="sample" id="sampleOut">
     <h2>Sample output</h2>
@@ -118,6 +146,7 @@ button.share:hover{background:#c4a574;color:#0c0d10}
     <a class="buy" id="buyBtn" href="https://py.pl/VzHU7QkjihOOJv6slVmG9A" target="_blank" rel="noopener">Buy — $10</a>
     <a class="sec" href="index.html">Try the demo</a>
     <button type="button" class="share" id="shareBtn">Share this page</button>
+    <button type="button" class="share" id="promoBtn">Copy promo text</button>
   </div>
   <p class="preview">If the Pages URL 404s, open the demo via <a href="https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/index.html" target="_blank" rel="noopener">htmlpreview</a> (same files, no install). Canonical Pages URL once Actions source is set: <a href="https://serialchiller09-boop.github.io/scenewright/">serialchiller09-boop.github.io/scenewright</a>.</p>
 
@@ -132,12 +161,16 @@ button.share:hover{background:#c4a574;color:#0c0d10}
       <p>An identity paragraph you write once in the Bible. Every scene prompt reuses it so the same character stays consistent in Grok Imagine.</p>
     </details>
     <details>
+      <summary>How do I get the files after paying?</summary>
+      <p>Use the live demo / htmlpreview links on this page, or download the GitHub repo. There is no separate email delivery&mdash;the product is the browser compiler in the repo.</p>
+    </details>
+    <details>
       <summary>Refunds?</summary>
       <p>Handled through PayPal&rsquo;s buyer protection for the $10 purchase. Reach out on PayPal if something went wrong with delivery.</p>
     </details>
   </div>
 
-  <p class="foot">Local HTML. Your chapter stays in the browser. Payment is handled by PayPal&mdash;no custom payment backend.</p>
+  <p class="foot">Local HTML. Your chapter stays in the browser. Payment is handled by PayPal&mdash;no custom payment backend. Support: <a href="mailto:j.pierson1990@outlook.com">j.pierson1990@outlook.com</a>.</p>
 </div>
 <div class="sticky-buy" role="region" aria-label="Buy">
   <p class="price-mini"><strong>$10</strong> one-time</p>
@@ -147,38 +180,32 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 <script>
 (function(){
   var SHARE_URL="https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/sell.html";
+  var PROMO="Scenewright turns a chapter into locked Grok Imagine prompts — face lock that sticks, scene cuts, one export pack. $10 one-time.\n\nTry / buy: "+SHARE_URL;
   var SAMPLE_SCENE="Shot: MS. Aspect: landscape. Same person as the lock plate: 34-year-old white woman, compact, tired rounded shoulders, oval face, deep-set grey-green eyes, centre-part dark brown hair stuck to her cheeks from rain, red lanyard line on her throat. navy V-neck scrubs under soaked navy coat. Same place as the location plate: narrow British terrace galley, yellow drum kettle on back ring. Fills the yellow kettle, coat dripping on lino.";
+  function copyText(text, btn, idleLabel, doneLabel){
+    function done(){
+      btn.textContent=doneLabel;
+      setTimeout(function(){btn.textContent=idleLabel},1600);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(function(){
+        window.prompt("Copy this:", text);
+      });
+    } else {
+      window.prompt("Copy this:", text);
+    }
+  }
   var shareBtn=document.getElementById("shareBtn");
   if(shareBtn){
-    shareBtn.onclick=function(){
-      function done(){
-        shareBtn.textContent="Link copied";
-        setTimeout(function(){shareBtn.textContent="Share this page"},1600);
-      }
-      if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(SHARE_URL).then(done).catch(function(){
-          window.prompt("Copy this link:", SHARE_URL);
-        });
-      } else {
-        window.prompt("Copy this link:", SHARE_URL);
-      }
-    };
+    shareBtn.onclick=function(){copyText(SHARE_URL, shareBtn, "Share this page", "Link copied");};
+  }
+  var promoBtn=document.getElementById("promoBtn");
+  if(promoBtn){
+    promoBtn.onclick=function(){copyText(PROMO, promoBtn, "Copy promo text", "Promo copied");};
   }
   var copyBtn=document.getElementById("copySample");
   if(copyBtn){
-    copyBtn.onclick=function(){
-      function done(){
-        copyBtn.textContent="Copied";
-        setTimeout(function(){copyBtn.textContent="Copy sample scene"},1600);
-      }
-      if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(SAMPLE_SCENE).then(done).catch(function(){
-          window.prompt("Copy this prompt:", SAMPLE_SCENE);
-        });
-      } else {
-        window.prompt("Copy this prompt:", SAMPLE_SCENE);
-      }
-    };
+    copyBtn.onclick=function(){copyText(SAMPLE_SCENE, copyBtn, "Copy sample scene", "Copied");};
   }
 })();
 </script>
