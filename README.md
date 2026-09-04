@@ -11,7 +11,7 @@ https://serialchiller09-boop.github.io/scenewright/
 - Demo app: https://serialchiller09-boop.github.io/scenewright/
 - Sell page: https://serialchiller09-boop.github.io/scenewright/sell.html
 
-**Pages source:** if the site 404s after merge, set **Settings → Pages → Source: GitHub Actions** (not “Deploy from a branch”). Workflow: `.github/workflows/pages.yml` (upload-pages-artifact + deploy-pages). Leave that file as-is unless the deploy pattern changes.
+**Pages source:** if the site 404s after merge, set **Settings → Pages → Build and deployment → Source: GitHub Actions** (not “Deploy from a branch”). Workflow: `.github/workflows/pages.yml` (upload-pages-artifact + deploy-pages). Leave that file as-is unless the deploy pattern changes.
 
 ## Buy
 
