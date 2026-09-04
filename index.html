@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scenewright</title>
 <style>
-body{margin:0;background:#0c0d10;color:#e8e6df;font:16px/1.4 system-ui;padding:16px}
+body{margin:0;background:#0c0d10;color:#e8e6df;font:16px/1.4 system-ui;padding:16px;padding-top:0}
 h1{font-size:20px;margin:0 0 8px}h1 b{color:#c4a574;font-weight:600}
 .muted{color:#9a9588;font-size:13px}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
@@ -16,20 +16,36 @@ textarea{width:100%;min-height:100px}
 .card{background:#13151b;border:1px solid #2a2e3a;border-radius:8px;padding:12px;margin:10px 0}
 .prompt{white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace;background:#000;padding:10px;border-radius:6px}
 .err{color:#c47a5c}
-a.product{color:#c4a574;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #c4a574;border-radius:8px;padding:8px 12px}
+a.product{color:#c4a574;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #c4a574;border-radius:8px;padding:8px 12px;white-space:nowrap}
 a.product:hover{background:#c4a574;color:#0c0d10}
+a.product.buy{background:#c4a574;color:#0c0d10;border-color:#c4a574}
+a.product.buy:hover{filter:brightness(1.06)}
+.sticky-bar{position:sticky;top:0;z-index:40;background:rgba(12,13,16,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #2a2e3a;margin:0 -16px 12px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sticky-bar .brand{font-size:15px;margin:0}
+.sticky-bar .brand b{color:#c4a574;font-weight:600}
+.sticky-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:4px}
 .tip{border-color:#3a3428}
 .tip strong{color:#c4a574;font-size:13px}
+.empty{border-style:dashed;border-color:#3a3428;text-align:left}
+.empty h2{font-size:15px;margin:0 0 6px;color:#c4a574;font-weight:600}
+.empty p{margin:0 0 10px}
+.empty .row{margin:8px 0 0}
 </style>
 </head>
 <body>
+<div class="sticky-bar" role="banner">
+  <p class="brand">Scene<b>wright</b> demo</p>
+  <div class="sticky-actions">
+    <a class="product" href="sell.html">$10 product</a>
+    <a class="product buy" href="https://py.pl/VzHU7QkjihOOJv6slVmG9A" target="_blank" rel="noopener">Buy — $10</a>
+  </div>
+</div>
 <div class="header">
   <div>
     <h1>Scene<b>wright</b></h1>
     <p class="muted" style="margin:0">Paste a chapter. Lock faces. Copy prompts into Grok Imagine.</p>
   </div>
-  <a class="product" href="sell.html">$10 product</a>
 </div>
 <div class="row">
   <button class="p" type="button" id="btnSample">Load sample</button>
@@ -57,6 +73,19 @@ function esc(s){
     .replace(/</g, String.fromCharCode(38)+"lt;")
     .replace(/>/g, String.fromCharCode(38)+"gt;")
     .replace(/"/g, String.fromCharCode(38)+"quot;");
+}
+function isEmptyProject(p){
+  p=p||{};
+  return !String(p.story||"").trim() && !(p.scenes&&p.scenes.length) && !(p.characters&&p.characters.length);
+}
+function emptyStateHtml(){
+  return '<div class="card empty" id="emptyState">'
+    +'<h2>No story loaded yet</h2>'
+    +'<p class="muted">Paste a chapter below, or hit <b>Load sample</b> to walk Beech Street through Bible → Scenes → Export.</p>'
+    +'<div class="row">'
+    +'<button class="p" type="button" id="emptySample">Load sample</button>'
+    +'<a class="product" href="sell.html">See what&rsquo;s included</a>'
+    +'</div></div>';
 }
 function styleP(s){
   s=s||{};
@@ -170,6 +199,10 @@ function downloadTxt(filename,text){
   document.body.appendChild(a); a.click();
   setTimeout(function(){URL.revokeObjectURL(url);a.remove()},0);
 }
+function wireEmptySample(){
+  var b=$("emptySample");
+  if(b) b.onclick=function(){state.p=sample();state.step=2;save();draw()};
+}
 function draw(){
   showErr("");
   var nav=$("nav");
@@ -181,13 +214,21 @@ function draw(){
   nav.innerHTML=html;
   var p=state.p, main=$("main");
   if(state.step===0){
-    main.innerHTML='<div class="card"><div class="muted">Title</div><input id="title" value="'+esc(p.title)+'"><div class="muted">Chapter</div><textarea id="story">'+esc(p.story)+'</textarea><div class="row"><button class="p" type="button" id="go">Extract + cut scenes</button></div></div>';
+    html=(isEmptyProject(p)?emptyStateHtml():"")
+      +'<div class="card"><div class="muted">Title</div><input id="title" value="'+esc(p.title)+'"><div class="muted">Chapter</div><textarea id="story" placeholder="Paste your chapter here…">'+esc(p.story)+'</textarea><div class="row"><button class="p" type="button" id="go">Extract + cut scenes</button></div></div>';
+    main.innerHTML=html;
+    wireEmptySample();
     $("title").oninput=function(){p.title=this.value;save()};
     $("story").oninput=function(){p.story=this.value;save()};
     $("go").onclick=extract;
     return;
   }
   if(state.step===1){
+    if(isEmptyProject(p)){
+      main.innerHTML=emptyStateHtml()+'<p class="muted">Bible needs characters and locations from a story. Load a sample or go back to Story.</p>';
+      wireEmptySample();
+      return;
+    }
     html='<div class="card"><div class="muted">Style lock</div><input id="medium" value="'+esc(p.style.medium||"")+'"><input id="light" value="'+esc(p.style.lighting||"")+'" placeholder="Lighting"><input id="pal" value="'+esc(p.style.palette||"")+'" placeholder="Palette"></div>';
     for(i=0;i<p.characters.length;i++){
       var c=p.characters[i];
@@ -222,6 +263,11 @@ function draw(){
     return;
   }
   if(state.step===2){
+    if(isEmptyProject(p) || !(p.scenes&&p.scenes.length)){
+      main.innerHTML=emptyStateHtml()+'<p class="muted">No scenes to compile yet. Load the sample or extract from a chapter on Story.</p>';
+      wireEmptySample();
+      return;
+    }
     html="";
     for(i=0;i<p.scenes.length;i++){
       var s=p.scenes[i];
@@ -240,6 +286,11 @@ function draw(){
       };
     });
     $("toex").onclick=function(){state.step=3;draw()};
+    return;
+  }
+  if(isEmptyProject(p) || !(p.scenes&&p.scenes.length)){
+    main.innerHTML=emptyStateHtml()+'<p class="muted">Nothing to export yet. Load the sample or finish Story → Bible → Scenes first. Copy entire pack / Download .txt appear once a pack exists.</p>';
+    wireEmptySample();
     return;
   }
   var pack=packText(p);
