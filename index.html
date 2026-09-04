@@ -8,7 +8,7 @@
 body{margin:0;background:#0c0d10;color:#e8e6df;font:16px/1.4 system-ui;padding:16px}
 h1{font-size:20px;margin:0 0 8px}h1 b{color:#c4a574;font-weight:600}
 .muted{color:#9a9588;font-size:13px}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 button,input,textarea{font:inherit;color:inherit;background:#13151b;border:1px solid #2a2e3a;border-radius:8px;padding:10px 12px}
 button{cursor:pointer}
 button.p{border-color:#c4a574;color:#c4a574}
@@ -16,11 +16,19 @@ textarea{width:100%;min-height:100px}
 .card{background:#13151b;border:1px solid #2a2e3a;border-radius:8px;padding:12px;margin:10px 0}
 .prompt{white-space:pre-wrap;font:12px/1.5 ui-monospace,monospace;background:#000;padding:10px;border-radius:6px}
 .err{color:#c47a5c}
+a.product{color:#c4a574;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #c4a574;border-radius:8px;padding:8px 12px}
+a.product:hover{background:#c4a574;color:#0c0d10}
+.header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:4px}
 </style>
 </head>
 <body>
-<h1>Scene<b>wright</b></h1>
-<p class="muted">Paste a chapter. Lock faces. Copy prompts into Grok Imagine.</p>
+<div class="header">
+  <div>
+    <h1>Scene<b>wright</b></h1>
+    <p class="muted" style="margin:0">Paste a chapter. Lock faces. Copy prompts into Grok Imagine.</p>
+  </div>
+  <a class="product" href="sell.html">$10 product</a>
+</div>
 <div class="row">
   <button class="p" type="button" id="btnSample">Load sample</button>
   <button type="button" id="btnNew">New</button>
@@ -130,6 +138,32 @@ function extract(){
   }
   state.step=1; save(); draw();
 }
+function packText(p){
+  var lines=["# "+p.title],i;
+  for(i=0;i<p.characters.length;i++){
+    var ch=p.characters[i];
+    var wd=(ch.wardrobe&&ch.wardrobe[0]&&ch.wardrobe[0].desc)||"";
+    lines.push("LOCK "+ch.name+" (portrait)");
+    lines.push(styleP(p.style)+". Neutral full-body lock plate. "+(ch.block||"")+". "+wd+". Standing still, full body.");
+  }
+  for(i=0;i<p.locations.length;i++){
+    lines.push("LOCK "+p.locations[i].name+" (landscape)");
+    lines.push(styleP(p.style)+". Empty establishing shot. "+(p.locations[i].block||""));
+  }
+  for(i=0;i<p.scenes.length;i++){
+    lines.push("## "+p.scenes[i].title);
+    lines.push(compile(p,p.scenes[i]));
+  }
+  return lines.join("\n\n");
+}
+function downloadTxt(filename,text){
+  var blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url; a.download=filename||"scenewright-pack.txt";
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);a.remove()},0);
+}
 function draw(){
   showErr("");
   var nav=$("nav");
@@ -187,7 +221,7 @@ function draw(){
       var s=p.scenes[i];
       html+='<div class="card"><strong>'+esc(s.title)+'</strong><div class="muted">'+esc(s.beat||"")+'</div><textarea data-fr="'+i+'">'+esc(s.frame||"")+'</textarea><div class="prompt">'+esc(compile(p,s))+'</div><button type="button" data-cp="'+i+'">Copy prompt</button></div>';
     }
-    html+='<div class="row"><button class="p" type="button" id="toex">Export pack</button></div>';
+    html+='<div class="row"><button class="p" type="button" id="toex">Export prompt pack →</button></div>';
     main.innerHTML=html;
     [].forEach.call(document.querySelectorAll("[data-fr]"),function(el){
       el.oninput=function(){p.scenes[+el.getAttribute("data-fr")].frame=el.value;save()};
@@ -202,25 +236,16 @@ function draw(){
     $("toex").onclick=function(){state.step=3;draw()};
     return;
   }
-  var lines=["# "+p.title];
-  for(i=0;i<p.characters.length;i++){
-    var ch=p.characters[i];
-    var wd=(ch.wardrobe&&ch.wardrobe[0]&&ch.wardrobe[0].desc)||"";
-    lines.push("LOCK "+ch.name+" (portrait)");
-    lines.push(styleP(p.style)+". Neutral full-body lock plate. "+(ch.block||"")+". "+wd+". Standing still, full body.");
-  }
-  for(i=0;i<p.locations.length;i++){
-    lines.push("LOCK "+p.locations[i].name+" (landscape)");
-    lines.push(styleP(p.style)+". Empty establishing shot. "+(p.locations[i].block||""));
-  }
-  for(i=0;i<p.scenes.length;i++){
-    lines.push("## "+p.scenes[i].title);
-    lines.push(compile(p,p.scenes[i]));
-  }
-  main.innerHTML='<div class="card"><p class="muted">Grok Imagine: lock cards first, then S01-S03, then the rest.</p><div class="prompt" id="pack">'+esc(lines.join("\n\n"))+'</div><div class="row"><button class="p" type="button" id="cpack">Copy all</button></div></div>';
+  var pack=packText(p);
+  main.innerHTML='<div class="card"><p class="muted">Grok Imagine: lock cards first, then S01–S03, then the rest.</p><div class="prompt" id="pack">'+esc(pack)+'</div><div class="row"><button class="p" type="button" id="cpack">Copy entire pack</button><button type="button" id="dlpack">Download .txt</button></div></div>';
   $("cpack").onclick=function(){
     var t=$("pack").innerText;
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t);
+    this.textContent="Copied";
+  };
+  $("dlpack").onclick=function(){
+    var name=(p.title||"scenewright").replace(/[^\w\-]+/g,"-").replace(/^-|-$/g,"")||"scenewright";
+    downloadTxt(name+"-pack.txt",pack);
   };
 }
 $("nav").onclick=function(e){
