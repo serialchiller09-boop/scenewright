@@ -13,6 +13,10 @@ https://serialchiller09-boop.github.io/scenewright/
 
 **Pages source:** if the site 404s after merge, set **Settings → Pages → Build and deployment → Source: GitHub Actions** (not “Deploy from a branch”). Workflow: `.github/workflows/pages.yml` (upload-pages-artifact + deploy-pages). Leave that file as-is unless the deploy pattern changes.
 
+**Promo fallback (works while Pages is 404):**
+- Demo: https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/index.html
+- Sell: https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/sell.html
+
 ## Buy
 
 [PayPal — $10](https://py.pl/VzHU7QkjihOOJv6slVmG9A)
@@ -33,7 +37,7 @@ Clear Beech Street sample: [`packs/beech-street-imagine-pack.txt`](packs/beech-s
 
 | Path | Purpose |
 |------|---------|
-| `sell.html` | $10 sales landing |
+| `sell.html` | $10 sales landing (OG meta + FAQ) |
 | `sell/README.md` | Sell notes + sample pack pointer |
 | `index.html` | Compiler demo |
 | `packs/` | Sample prompt pack |
