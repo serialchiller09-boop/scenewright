@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scenewright</title>
+<meta name="description" content="Paste a chapter. Lock faces. Export Grok Imagine prompts. $10 one-time — try the demo here.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Scenewright — demo">
+<meta property="og:description" content="Paste a chapter. Lock faces. Export Grok Imagine prompts.">
+<meta property="og:url" content="https://serialchiller09-boop.github.io/scenewright/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scenewright — demo">
+<meta name="twitter:description" content="Paste a chapter. Lock faces. Export Grok Imagine prompts.">
 <style>
 body{margin:0;background:#0c0d10;color:#e8e6df;font:16px/1.4 system-ui;padding:16px;padding-top:0}
 h1{font-size:20px;margin:0 0 8px}h1 b{color:#c4a574;font-weight:600}
@@ -168,7 +176,7 @@ function extract(){
     var bits=p.story.split(/\n\s*\n/).filter(function(x){return x.trim().length>40}).slice(0,10);
     if(!bits.length && p.story.trim()) bits=[p.story.trim()];
     p.scenes=bits.map(function(ex,idx){
-      return {title:"S"+("0"+(idx+1)).slice(-2),beat:ex.split(/[.!?]/)[0],frame:"",shot:"MS",loc:p.locations[0].id,cast:p.characters.slice(0,2).map(function(c){return c.id}),ward:{}};
+      return {title:"S"+(\"0\"+(idx+1)).slice(-2),beat:ex.split(/[.!?]/)[0],frame:"",shot:"MS",loc:p.locations[0].id,cast:p.characters.slice(0,2).map(function(c){return c.id}),ward:{}};
     });
   }
   state.step=1; save(); draw();
