@@ -20,12 +20,20 @@ body{margin:0;background:#0c0d10;color:#e8e6df;font:17px/1.5 system-ui,-apple-sy
 .brand{font-size:15px;letter-spacing:.04em;color:#9a9588;margin:0 0 20px}
 .brand b{color:#c4a574;font-weight:600}
 h1{font-size:clamp(1.6rem,4.5vw,2rem);line-height:1.2;margin:0 0 12px;font-weight:650}
-.lead{color:#c8c4b8;margin:0 0 16px;font-size:1.05rem}
+.lead{color:#c8c4b8;margin:0 0 12px;font-size:1.05rem}
+.speed{color:#c4a574;font-size:14px;font-weight:600;margin:0 0 16px}
 .proof{color:#9a9588;font-size:14px;margin:0 0 28px;padding:10px 12px;background:#13151b;border:1px solid #2a2e3a;border-radius:8px}
 ul.benefits{list-style:none;padding:0;margin:0 0 28px}
 ul.benefits li{position:relative;padding:10px 0 10px 28px;border-bottom:1px solid #2a2e3a}
 ul.benefits li:last-child{border-bottom:0}
 ul.benefits li::before{content:"";position:absolute;left:0;top:18px;width:10px;height:10px;border-radius:50%;background:#c4a574}
+.how{margin:0 0 28px}
+.how h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#9a9588;margin:0 0 12px;font-weight:600}
+.how ol{list-style:none;padding:0;margin:0;counter-reset:how}
+.how li{counter-increment:how;position:relative;padding:14px 14px 14px 52px;background:#13151b;border:1px solid #2a2e3a;border-radius:10px;margin:0 0 10px}
+.how li::before{content:counter(how);position:absolute;left:14px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:#c4a574;color:#0c0d10;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.how li strong{display:block;margin:0 0 4px;color:#e8e6df}
+.how li span{color:#c8c4b8;font-size:15px}
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 28px}
 @media (max-width:520px){.compare{grid-template-columns:1fr}}
 .compare .col{background:#13151b;border:1px solid #2a2e3a;border-radius:10px;padding:14px 14px 12px}
@@ -49,7 +57,9 @@ button.copy{font:inherit;cursor:pointer;color:#c4a574;background:transparent;bor
 button.copy:hover{background:#c4a574;color:#0c0d10}
 .price{font-size:1.35rem;margin:0 0 6px}
 .price strong{color:#c4a574}
-.muted{color:#9a9588;font-size:14px;margin:0 0 18px}
+.muted{color:#9a9588;font-size:14px;margin:0 0 10px}
+.guarantee{color:#c8c4b8;font-size:14px;margin:0 0 18px;padding:10px 12px;background:#13151b;border:1px solid #2a2e3a;border-radius:8px}
+.guarantee strong{color:#c4a574}
 .after{background:#13151b;border:1px solid #2a2e3a;border-radius:10px;padding:16px;margin:0 0 22px}
 .after h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#9a9588;margin:0 0 10px;font-weight:600}
 .after ol{margin:0;padding-left:1.2em;color:#e8e6df}
@@ -81,13 +91,23 @@ button.share:hover{background:#c4a574;color:#0c0d10}
   <p class="brand">Scene<b>wright</b></p>
   <h1>Turn a chapter into locked Grok Imagine prompts.</h1>
   <p class="lead">Paste your story, lock faces and places, then export a ready-to-run prompt pack&mdash;without rebuilding character descriptions every shot.</p>
-  <p class="proof">Writers use Scenewright to keep the same faces and rooms across a full chapter of Imagine shots&mdash;one lock plate, every scene.</p>
+  <p class="speed">About 2 minutes from paste to first export.</p>
+  <p class="proof">For writers shipping Grok Imagine chapters who need the same faces and rooms across every shot&mdash;one lock plate, whole chapter.</p>
 
   <ul class="benefits">
     <li><strong>Face lock that sticks.</strong> Identity paragraphs travel into every scene so Mara stays Mara.</li>
     <li><strong>Scene cuts, not guesswork.</strong> Extract beats, set wardrobe and locations, compile shot prompts.</li>
     <li><strong>One export pack.</strong> Lock plates + S01&ndash;Sn prompts you can copy or download as .txt.</li>
   </ul>
+
+  <div class="how" aria-label="How it works">
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>Paste a chapter</strong><span>Or hit Load sample in the demo. Everything stays in your browser.</span></li>
+      <li><strong>Lock faces &amp; places</strong><span>Write each identity once. Scene prompts reuse those plates automatically.</span></li>
+      <li><strong>Export the pack</strong><span>Copy or download .txt, paste lock plates into Grok Imagine first, then shots in order.</span></li>
+    </ol>
+  </div>
 
   <div class="compare" aria-label="Without vs with Scenewright">
     <div class="col">
@@ -132,6 +152,7 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 
   <p class="price"><strong>$10</strong> one-time</p>
   <p class="muted">PayPal checkout. No subscription. No account wait on our side.</p>
+  <p class="guarantee"><strong>Simple buy.</strong> PayPal buyer protection covers the $10 purchase. The product is the browser compiler in this repo&mdash;open it the moment you pay.</p>
 
   <div class="after">
     <h2>What you get after PayPal</h2>
@@ -170,7 +191,7 @@ button.share:hover{background:#c4a574;color:#0c0d10}
     </details>
   </div>
 
-  <p class="foot">Local HTML. Your chapter stays in the browser. Payment is handled by PayPal&mdash;no custom payment backend. Support: <a href="mailto:j.pierson1990@outlook.com">j.pierson1990@outlook.com</a>.</p>
+  <p class="foot">Local HTML. Your chapter stays in the browser. Payment is handled by PayPal&mdash;no custom payment backend. Support: <a href="mailto:j.pierson1990@outlook.com?subject=Scenewright%20support">j.pierson1990@outlook.com</a>.</p>
 </div>
 <div class="sticky-buy" role="region" aria-label="Buy">
   <p class="price-mini"><strong>$10</strong> one-time</p>
@@ -180,7 +201,7 @@ button.share:hover{background:#c4a574;color:#0c0d10}
 <script>
 (function(){
   var SHARE_URL="https://htmlpreview.github.io/?https://github.com/serialchiller09-boop/scenewright/blob/main/sell.html";
-  var PROMO="Scenewright turns a chapter into locked Grok Imagine prompts — face lock that sticks, scene cuts, one export pack. $10 one-time.\n\nTry / buy: "+SHARE_URL;
+  var PROMO="Scenewright turns a chapter into locked Grok Imagine prompts — face lock that sticks, scene cuts, one export pack. About 2 minutes to first export. $10 one-time.\n\nTry / buy: "+SHARE_URL;
   var SAMPLE_SCENE="Shot: MS. Aspect: landscape. Same person as the lock plate: 34-year-old white woman, compact, tired rounded shoulders, oval face, deep-set grey-green eyes, centre-part dark brown hair stuck to her cheeks from rain, red lanyard line on her throat. navy V-neck scrubs under soaked navy coat. Same place as the location plate: narrow British terrace galley, yellow drum kettle on back ring. Fills the yellow kettle, coat dripping on lino.";
   function copyText(text, btn, idleLabel, doneLabel){
     function done(){
